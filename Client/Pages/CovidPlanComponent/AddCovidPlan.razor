@@ -1,0 +1,244 @@
+﻿@page "/addcovidplan"
+
+@using Microsoft.AspNetCore.SignalR.Client
+@using SVSignalR.Shared.Models
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Add Covid Plan</h3>
+<Form Model="@cvPlan"
+      LabelColSpan="6"
+      WrapperColSpan="12">
+
+    <FormItem Label="Worker Id">
+        @*<Input @bind-Value="@cvInfo.PlanDisplay.WorkerId" />*@
+        <Search Placeholder="Nhập mã worker" EnterButton="@("Search")" @bind-Value="@cvPlan.WorkerId" OnSearch="SearchWorker" />
+    </FormItem>
+    <FormItem Label="Họ tên">
+        <Input @bind-Value="@cvPlan.WorkerInfo.FullName" />
+    </FormItem>
+    <FormItem Label="Phòng ban / Xưởng">
+        <Input @bind-Value="@cvPlan.WorkerInfo.SectionName" />
+    </FormItem>
+    <FormItem Label="Chuyền">
+        <Input @bind-Value="@cvPlan.WorkerInfo.LineName" />
+    </FormItem>
+    <FormItem Label="Số điện thoại">
+        <Input @bind-Value="@cvPlan.PhoneNumber" />
+    </FormItem>
+
+    <FormItem Label="Địa chỉ hiện tại">
+        <Row Gutter="16">
+            <AntDesign.Col Class="gutter-row" Span="8">
+                Thành phố (Tỉnh)
+            </AntDesign.Col>
+            <AntDesign.Col Class="gutter-row" Span="8">
+                Quận (Huyện)
+            </AntDesign.Col>
+            <AntDesign.Col Class="gutter-row" Span="8">
+                Thị trấn / Phường / Xã
+            </AntDesign.Col>
+        </Row>
+        <Row Gutter="16">
+            <AntDesign.Col Class="gutter-row" Span="8">
+                <Select DataSource="@_provinceList"
+                        @bind-Value="@cvPlan.AddressInfo.ProvinceId"
+                        LabelName="@nameof(AddressModel.Province)"
+                        ValueName="@nameof(AddressModel.ProvinceId)"
+                        Placeholder="Chọn tỉnh"
+                        EnableSearch
+                        OnBlur="OnBlur"
+                        OnFocus="OnFocus"
+                        OnSelectedItemChanged="ProvinceSelectedItemChanged"
+                        OnSearch="OnSearch">
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Class="gutter-row" Span="8">
+                <Select DataSource="@_districtList"
+                        @bind-Value="@cvPlan.AddressInfo.DistrictId"
+                        LabelName="@nameof(AddressModel.District)"
+                        ValueName="@nameof(AddressModel.DistrictId)"
+                        Placeholder="Chọn quận / huyện"
+                        EnableSearch
+                        OnBlur="OnBlur"
+                        OnFocus="OnFocus"
+                        OnSelectedItemChanged="DistrictSelectedItemChanged"
+                        OnSearch="OnSearch">
+                </Select>
+            </AntDesign.Col>
+            <AntDesign.Col Class="gutter-row" Span="8">
+                <Select DataSource="@_communeList"
+                        @bind-Value="@cvPlan.AddressInfo.CommuneId"
+                        LabelName="@nameof(AddressModel.Commune)"
+                        ValueName="@nameof(AddressModel.CommuneId)"
+                        Placeholder="Chọn xã / phường"
+                        EnableSearch
+                        OnBlur="OnBlur"
+                        OnFocus="OnFocus"
+                        OnSelectedItemChanged="CommunueSelectedItemChanged"
+                        OnSearch="OnSearch">
+                </Select>
+            </AntDesign.Col>
+        </Row>
+    </FormItem>
+
+    <FormItem Label="Chi tiết">
+        <TextArea @bind-Value="@cvPlan.AddressDetail" />
+    </FormItem>
+
+
+    @*<FormItem Label="DatePicker">
+            <DatePicker @bind-Value="@context.DatePicker" />
+        </FormItem>
+        <FormItem Label="RangePicker">
+            <RangePicker @bind-Value="@context.RangePicker" />
+        </FormItem>
+        <FormItem Label="InputNumber">
+            <AntDesign.InputNumber @bind-Value="@context.Number" />
+        </FormItem>
+        <FormItem Label="Switch">
+            <Switch @bind-Value="@context.Switch" />
+        </FormItem>*@
+    <FormItem Label="Tình trạng sức khỏe">
+        <RadioGroup @bind-Value="@cvPlan.HealthStatus">
+            <Radio RadioButton Value="@("Khỏe mạnh")">Khỏe mạnh</Radio>
+            <Radio RadioButton Value="@("Ho, sốt")">Ho, sốt</Radio>
+            <Radio RadioButton Value="@("Đau nhức mỏi cơ thể")">Đau nhức mỏi cơ thể</Radio>
+            <Radio RadioButton Value="@("Khác")">Khác</Radio>
+        </RadioGroup>
+    </FormItem>
+
+    <FormItem Label="Thông tin thêm">
+        <p>Thông tin thêm</p>
+    </FormItem>
+
+    <FormItem WrapperColOffset="6" WrapperColSpan="12">
+        <Button Size="large" type="primary" OnClick="CreateNewCovidPlan">
+            Lưu
+        </Button>
+    </FormItem>
+
+</Form>
+<p>@_addressSelected?.Province-@_addressSelected?.District - @_addressSelected?.Commune</p>
+<p>@msg</p>
+
+@code {
+    private HubConnection hubConnection;
+    CovidPlanModel cvPlan = new CovidPlanModel {
+        WorkerInfo = new WorkerModel(),
+        AddressInfo = new AddressModel()
+    };
+    AddressModel[] addresses;
+    List<AddressModel> _provinceList = new List<AddressModel>();
+    WorkerModel[] workers;
+    AddressModel _addressSelected;
+    string msg;
+
+    protected override async Task OnInitializedAsync()
+    {
+        addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
+        workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
+        foreach (var prvId in provinceIdList)
+        {
+            var addressByProvinceId = addresses.FirstOrDefault(f => f.ProvinceId == prvId);
+            _provinceList.Add(addressByProvinceId);
+        }
+
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl(NavigationManager.ToAbsoluteUri("/broadcastHub"))
+        .Build();
+
+        await hubConnection.StartAsync();
+    }
+
+    protected void SearchWorker()
+    {
+        if (string.IsNullOrEmpty(cvPlan.WorkerId))
+            return;
+
+        // Search workerInfo, CovidPlan
+        var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
+        if (workerInfo != null)
+        {
+            cvPlan.WorkerId = workerInfo.WorkerId;
+            cvPlan.WorkerInfo = workerInfo;
+        }
+    }
+
+    protected async Task CreateNewCovidPlan()
+    {
+        cvPlan.CovidPlanId = Guid.NewGuid().ToString();
+        cvPlan.AddressInfo = _addressSelected;
+        cvPlan.AddressId = _addressSelected.AddressId;
+        cvPlan.CreatedTime = DateTime.Now;
+
+        await Http.PostAsJsonAsync("api/covidplans", cvPlan);
+        if (IsConnected) await SendMessage();
+        NavigationManager.NavigateTo("covidplanlist");
+    }
+
+    Task SendMessage() => hubConnection.SendAsync("SendMessage");
+    public bool IsConnected =>
+    hubConnection.State == HubConnectionState.Connected;
+
+    public void Dispose()
+    {
+        _ = hubConnection.DisposeAsync();
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("covidplanlist");
+    }
+
+    List<AddressModel> _districtList;
+    private void ProvinceSelectedItemChanged(AddressModel value)
+    {
+        _districtList = new List<AddressModel>();
+        _communeList = new List<AddressModel>();
+
+        var districtIds = addresses.Where(w => w.ProvinceId == value.ProvinceId).Select(s => s.DistrictId).Distinct().ToList();
+        foreach (var disId in districtIds)
+        {
+            var district = addresses.FirstOrDefault(f => f.DistrictId == disId);
+            if (district != null)
+                _districtList.Add(district);
+        }
+    }
+
+    List<AddressModel> _communeList;
+    private void DistrictSelectedItemChanged(AddressModel value)
+    {
+        _communeList = new List<AddressModel>();
+        var communeIds = addresses.Where(w => w.DistrictId == value.DistrictId).Select(s => s.CommuneId).Distinct().ToList();
+        foreach (var cId in communeIds)
+        {
+            var commune = addresses.FirstOrDefault(f => f.CommuneId == cId);
+            if (commune != null)
+                _communeList.Add(commune);
+        }
+    }
+
+    private void CommunueSelectedItemChanged(AddressModel value)
+    {
+        _addressSelected = value;
+    }
+
+    private void OnBlur()
+    {
+
+    }
+
+    private void OnFocus()
+    {
+
+    }
+
+    private void OnSearch(string value)
+    {
+
+    }
+}

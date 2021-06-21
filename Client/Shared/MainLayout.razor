@@ -1,0 +1,141 @@
+﻿
+@inherits LayoutComponentBase
+
+
+@code {
+    EmbeddedProperty Property(int span, int offset) => new() { Span = span, Offset = offset };
+    RenderFragment sub2Title =
+    @<span>
+        <Icon Type="schedule" Theme="outline"></Icon>
+        <span> Managment</span>
+    </span>;
+
+RenderFragment outsoleTitle =
+@<span>
+    <Icon Type="sisternode" Theme="outline"></Icon>
+    <span> Outsole</span>
+</span>;
+
+private RenderFragment _text =@<span>User: Admin</span>;
+
+private RenderFragment _content =
+@<div>
+    <Button Type="primary">Logout !</Button>
+</div>;
+}
+
+<Layout>
+    <Header Class="site-layout-sub-header-background" Style="padding: 0; text-align:center;">
+        <Row>
+            <Col Flex=@("auto")><h2>Saoviet Master Schedule</h2></Col>
+            @*<Col Flex=@("100px")>
+                    <Popover Placement="@PlacementType.LeftTop" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.TriggerType.Hover})">
+                        <span class="avatar-item">
+                            <Badge Count="1">
+                                <Avatar Size="large" Shape="square" Icon="user" Style="background-color: #87d068;" />
+                            </Badge>
+                        </span>
+                    </Popover>
+                </Col>*@
+        </Row>
+    </Header>
+    <Layout>
+        <Sider Style="background-color: white; margin-top: 16px;"
+               Breakpoint="@BreakpointType.Lg"
+               Width="250"
+               CollapsedWidth="0"
+               OnBreakpoint="broken => { Console.WriteLine(broken); }"
+               OnCollapse="collapsed => { Console.WriteLine(collapsed); }">
+            <Layout>
+                <Content>
+                    @*DefaultOpenKeys=@(new[] { "sub1" })*@
+                    @*DefaultSelectedKeys=@(new[]{"1"})*@
+                    <Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline">
+                        <MenuItem Key="1">
+                            <NavLink href="" Match="NavLinkMatch.All">
+                                <Icon Type="home" Theme="outline" />
+                                <span class="nav-text"> Home</span>
+                            </NavLink>
+                        </MenuItem>
+                        @*<SubMenu Key="sub1" TitleTemplate=@sub2Title>
+                            <MenuItem Key="5"><Icon Type="sliders" Theme="outline" /> Sewing</MenuItem>
+                            <MenuItem Key="6"><Icon Type="ant-design" Theme="outline" /> Cut-prep</MenuItem>
+                            <SubMenu Key="sub2" TitleTemplate=@outsoleTitle>
+                                <MenuItem RouterLink="Outsole/OSMWHRelease" Key="7"><Icon Type="appstore-add" Theme="outline" /> Confirm Material</MenuItem>
+                                <MenuItem Key="8"><Icon Type="block" Theme="outline" /> Release Material</MenuItem>
+                            </SubMenu>
+                            <MenuItem Key="9">
+                                <NavLink>
+                                    <Icon Type="box-plot" Theme="outline" /> Assembly
+                                </NavLink>
+                            </MenuItem>
+                        </SubMenu>
+                        <MenuItem Key="10">
+                            <Icon Type="pie-chart" Theme="outline" />
+                            <span class="nav-text">Reports</span>
+                        </MenuItem>*@
+                        @*<MenuItem RouterLink="login" Key="11"><Icon Type="user" Theme="outline" />User</MenuItem>*@
+                        <MenuItem RouterLink="listbooks" Key="11"><Icon Type="wechat" Theme="outline" />List Books</MenuItem>
+                        @*<MenuItem RouterLink="covid-plan" Key="12"><Icon Type="appstore-add" Theme="outline" />Covid Plan</MenuItem>*@
+                        <MenuItem RouterLink="covidplanlist" Key="13"><Icon Type="partition" Theme="outline" />Covid Plan List</MenuItem>
+                    </Menu>
+                </Content>
+            </Layout>
+        </Sider>
+        <Layout>
+            <Content Style=" margin: 16px 16px 0;">
+                @*<BadgeRibbon Text="university of technical and education" Color="orange"></BadgeRibbon>*@
+                <Card Style="min-height: calc(100vh - 136px);">
+                    @Body
+                </Card>
+            </Content>
+            <Footer Style="text-align: center; height:40px;">Saoviet ©2021 Created by ItTeam Version 1.0</Footer>
+        </Layout>
+    </Layout>
+</Layout>
+
+<style>
+    #components-layout-demo-responsive .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+
+    .site-layout-sub-header-background {
+        background: #fff;
+    }
+
+    .site-layout-background {
+        background: #fff;
+    }
+
+    .avatar-item {
+        margin-right: 24px;
+    }
+
+    [class*='-col-rtl'] .avatar-item {
+        margin-right: 0;
+        margin-left: 24px;
+    }
+</style>
+
+
+@*@inherits LayoutComponentBase
+
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+
+        <div class="main">
+            <div class="top-row px-4">
+                <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            </div>
+
+            <div class="content px-4">
+                @Body
+            </div>
+        </div>
+    </div>*@
+
+

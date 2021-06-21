@@ -1,0 +1,12 @@
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\bin\Debug\net5.0\SVSignalR.Shared.deps.json
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\bin\Debug\net5.0\SVSignalR.Shared.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\bin\Debug\net5.0\ref\SVSignalR.Shared.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\bin\Debug\net5.0\SVSignalR.Shared.pdb
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.csprojAssemblyReference.cache
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.AssemblyInfoInputs.cache
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.AssemblyInfo.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.csproj.CoreCompileInputs.cache
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\ref\SVSignalR.Shared.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Shared\obj\Debug\net5.0\SVSignalR.Shared.pdb

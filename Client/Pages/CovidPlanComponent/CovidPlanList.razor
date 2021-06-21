@@ -1,0 +1,121 @@
+﻿@page "/covidplanlist"
+
+@using SVSignalR.Shared.Models
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Text.Json
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Covid Plan Detail</h3>
+<p>
+    <a href="/addcovidplan">Create A New Record</a>
+</p>
+@if (cvDisplays == null || cvDisplays.Count() == 0)
+{
+    <Empty Simple />
+}
+else
+{
+    <Table TItem="CovidPlanDisplay" DataSource="@cvDisplays"
+           ScrollY="400px" PageSize="50" ScrollX="1550"
+           Size="@TableSize.Small"
+           Bordered="true">
+        <Column Title="WorkerId" Width="100" @bind-Field="@context.WorkerId" Sortable="true" />
+        <Column Title="FullName" Width="200" @bind-Field="@context.FullName" />
+        <Column Title="Section" Width="200" @bind-Field="@context.SectionName" />
+        <Column Title="Line" Width="200" @bind-Field="@context.LineName" />
+        <Column Title="PhoneNumber" Width="150" @bind-Field="@context.PhoneNumber" />
+        <Column Title="Detail" Width="200" @bind-Field="@context.AddressDetail" />
+        <Column Title="Address" Width="400" @bind-Field="@context.Address" />
+        <Column Title="Status" Width="100" @bind-Field="@context.HealthStatus" />
+        <Column Title="Time" Width="100" @bind-Field="@context.CreatedTime" Format="yyyy/MM/dd" />
+    </Table>
+}
+<p>@msg</p>
+
+@code {
+
+    CovidPlanModel[] cvPlans;
+    AddressModel[] addresses;
+    WorkerModel[] workers;
+    List<CovidPlanDisplay> cvDisplays;
+    string msg;
+
+    private HubConnection hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/broadcastHub"))
+            .Build();
+
+        hubConnection.On("ReceiveMessage", () =>
+        {
+            CallLoadData();
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        await LoadData();
+    }
+
+    private void CallLoadData()
+    {
+        Task.Run(async () =>
+        {
+            await LoadData();
+        });
+    }
+    protected async Task LoadData()
+    {
+        cvPlans = await Http.GetFromJsonAsync<CovidPlanModel[]>("api/covidplans");
+        addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
+        workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        cvDisplays = new List<CovidPlanDisplay>();
+        foreach (var cvPlan in cvPlans)
+        {
+            var workerById = workers.FirstOrDefault(f => f.WorkerId == cvPlan.WorkerId);
+            var addressById = addresses.FirstOrDefault(f => f.AddressId == cvPlan.AddressId);
+            cvDisplays.Add(new CovidPlanDisplay
+            {
+                WorkerId = cvPlan.WorkerId,
+                FullName = workerById.FullName,
+                SectionName = workerById.SectionName,
+                LineName = workerById.LineName,
+                PhoneNumber = cvPlan.PhoneNumber,
+                Address = String.Format("{0}/{1}/{2}", addressById.Province, addressById.District, addressById.Commune),
+                AddressDetail = cvPlan.AddressDetail,
+                HealthStatus = cvPlan.HealthStatus,
+                CreatedTime = cvPlan.CreatedTime
+            });
+        }
+
+        msg = $"Success:{JsonSerializer.Serialize(cvDisplays)}";
+        StateHasChanged();
+    }
+
+    public bool IsConnected =>
+        hubConnection.State == HubConnectionState.Connected;
+
+    public void Dispose()
+    {
+        _ = hubConnection.DisposeAsync();
+    }
+
+    class CovidPlanDisplay
+    {
+        public string WorkerId { get; set; }
+        public string FullName { get; set; }
+        public string SectionName { get; set; }
+        public string LineName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+        public string AddressDetail { get; set; }
+        public string HealthStatus { get; set; }
+        public DateTime CreatedTime { get; set; }
+    }
+}
