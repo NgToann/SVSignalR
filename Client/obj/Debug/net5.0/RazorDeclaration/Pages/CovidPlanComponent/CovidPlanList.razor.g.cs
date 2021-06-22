@@ -98,13 +98,20 @@ using SVSignalR.Shared.Models;
 #nullable disable
 #nullable restore
 #line 4 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
+using SVSignalR.Shared.AppData;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 6 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
 using Microsoft.AspNetCore.SignalR.Client;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
+#line 7 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
 using System.Text.Json;
 
 #line default
@@ -119,12 +126,16 @@ using System.Text.Json;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 37 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
+#line 41 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\CovidPlanList.razor"
        
-
+    private bool _loading = true;
     CovidPlanModel[] cvPlans;
+
     AddressModel[] addresses;
     WorkerModel[] workers;
+
+    List<object> par = new List<object>();
+
     List<CovidPlanDisplay> cvDisplays;
     string msg;
 
@@ -157,9 +168,14 @@ using System.Text.Json;
     }
     protected async Task LoadData()
     {
+        _loading = true;
+        
         cvPlans = await Http.GetFromJsonAsync<CovidPlanModel[]>("api/covidplans");
         addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
         workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        workerAddressState.Addresses = addresses;
+        workerAddressState.Workers = workers;
 
         cvDisplays = new List<CovidPlanDisplay>();
         foreach (var cvPlan in cvPlans)
@@ -181,6 +197,9 @@ using System.Text.Json;
         }
 
         msg = $"Success:{JsonSerializer.Serialize(cvDisplays)}";
+
+        _loading = false;
+
         StateHasChanged();
     }
 
@@ -208,6 +227,7 @@ using System.Text.Json;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private WorkerAddressState workerAddressState { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private HttpClient Http { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
     }

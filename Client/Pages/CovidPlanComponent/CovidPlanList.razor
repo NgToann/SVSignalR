@@ -1,44 +1,52 @@
 ﻿@page "/covidplanlist"
 
 @using SVSignalR.Shared.Models
+@using SVSignalR.Shared.AppData
+
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject WorkerAddressState workerAddressState
 
 <h3>Covid Plan Detail</h3>
-<p>
-    <a href="/addcovidplan">Create A New Record</a>
-</p>
-@if (cvDisplays == null || cvDisplays.Count() == 0)
-{
-    <Empty Simple />
-}
-else
-{
-    <Table TItem="CovidPlanDisplay" DataSource="@cvDisplays"
-           ScrollY="400px" PageSize="50" ScrollX="1550"
-           Size="@TableSize.Small"
-           Bordered="true">
-        <Column Title="WorkerId" Width="100" @bind-Field="@context.WorkerId" Sortable="true" />
-        <Column Title="FullName" Width="200" @bind-Field="@context.FullName" />
-        <Column Title="Section" Width="200" @bind-Field="@context.SectionName" />
-        <Column Title="Line" Width="200" @bind-Field="@context.LineName" />
-        <Column Title="PhoneNumber" Width="150" @bind-Field="@context.PhoneNumber" />
-        <Column Title="Detail" Width="200" @bind-Field="@context.AddressDetail" />
-        <Column Title="Address" Width="400" @bind-Field="@context.Address" />
-        <Column Title="Status" Width="100" @bind-Field="@context.HealthStatus" />
-        <Column Title="Time" Width="100" @bind-Field="@context.CreatedTime" Format="yyyy/MM/dd" />
-    </Table>
-}
-<p>@msg</p>
-
+<Spin Spinning="_loading">
+    <p>
+        <a href="/addcovidplan">Create A New Record</a>
+    </p>
+    @if (cvDisplays == null || cvDisplays.Count() == 0)
+    {
+        <Empty Simple />
+    }
+    else
+    {
+        <Table TItem="CovidPlanDisplay" DataSource="@cvDisplays"
+               ScrollY="400px" PageSize="50" ScrollX="1550"
+               Size="@TableSize.Small"
+               Bordered="true">
+            <Column Title="WorkerId" Width="100" @bind-Field="@context.WorkerId" Sortable="true" />
+            <Column Title="FullName" Width="200" @bind-Field="@context.FullName" />
+            <Column Title="Section" Width="200" @bind-Field="@context.SectionName" />
+            <Column Title="Line" Width="200" @bind-Field="@context.LineName" />
+            <Column Title="PhoneNumber" Width="150" @bind-Field="@context.PhoneNumber" />
+            <Column Title="Detail" Width="200" @bind-Field="@context.AddressDetail" />
+            <Column Title="Address" Width="400" @bind-Field="@context.Address" />
+            <Column Title="Status" Width="100" @bind-Field="@context.HealthStatus" />
+            <Column Title="Time" Width="100" @bind-Field="@context.CreatedTime" Format="yyyy/MM/dd" />
+        </Table>
+    }
+    @*<p>@msg</p>*@
+</Spin>
 @code {
-
+    private bool _loading = true;
     CovidPlanModel[] cvPlans;
+
     AddressModel[] addresses;
     WorkerModel[] workers;
+
+    List<object> par = new List<object>();
+
     List<CovidPlanDisplay> cvDisplays;
     string msg;
 
@@ -71,9 +79,14 @@ else
     }
     protected async Task LoadData()
     {
+        _loading = true;
+        
         cvPlans = await Http.GetFromJsonAsync<CovidPlanModel[]>("api/covidplans");
         addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
         workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        workerAddressState.Addresses = addresses;
+        workerAddressState.Workers = workers;
 
         cvDisplays = new List<CovidPlanDisplay>();
         foreach (var cvPlan in cvPlans)
@@ -95,6 +108,9 @@ else
         }
 
         msg = $"Success:{JsonSerializer.Serialize(cvDisplays)}";
+
+        _loading = false;
+
         StateHasChanged();
     }
 

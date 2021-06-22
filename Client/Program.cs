@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using SVSignalR.Shared.AppData;
 
 namespace SVSignalR.Client
 {
@@ -17,6 +18,7 @@ namespace SVSignalR.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddAntDesign();
+            builder.Services.AddSingleton<WorkerAddressState>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             await builder.Build().RunAsync();
         }

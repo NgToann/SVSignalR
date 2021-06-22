@@ -2,128 +2,134 @@
 
 @using Microsoft.AspNetCore.SignalR.Client
 @using SVSignalR.Shared.Models
+@using SVSignalR.Shared.AppData
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject WorkerAddressState workerAddressState
 
 <h3>Add Covid Plan</h3>
-<Form Model="@cvPlan"
-      LabelColSpan="6"
-      WrapperColSpan="12">
+<Spin Spinning="@_loading">
+    <Form Model="@cvPlan"
+          LabelColSpan="6"
+          WrapperColSpan="12">
 
-    <FormItem Label="Worker Id">
-        @*<Input @bind-Value="@cvInfo.PlanDisplay.WorkerId" />*@
-        <Search Placeholder="Nhập mã worker" EnterButton="@("Search")" @bind-Value="@cvPlan.WorkerId" OnSearch="SearchWorker" />
-    </FormItem>
-    <FormItem Label="Họ tên">
-        <Input @bind-Value="@cvPlan.WorkerInfo.FullName" />
-    </FormItem>
-    <FormItem Label="Phòng ban / Xưởng">
-        <Input @bind-Value="@cvPlan.WorkerInfo.SectionName" />
-    </FormItem>
-    <FormItem Label="Chuyền">
-        <Input @bind-Value="@cvPlan.WorkerInfo.LineName" />
-    </FormItem>
-    <FormItem Label="Số điện thoại">
-        <Input @bind-Value="@cvPlan.PhoneNumber" />
-    </FormItem>
-
-    <FormItem Label="Địa chỉ hiện tại">
-        <Row Gutter="16">
-            <AntDesign.Col Class="gutter-row" Span="8">
-                Thành phố (Tỉnh)
-            </AntDesign.Col>
-            <AntDesign.Col Class="gutter-row" Span="8">
-                Quận (Huyện)
-            </AntDesign.Col>
-            <AntDesign.Col Class="gutter-row" Span="8">
-                Thị trấn / Phường / Xã
-            </AntDesign.Col>
-        </Row>
-        <Row Gutter="16">
-            <AntDesign.Col Class="gutter-row" Span="8">
-                <Select DataSource="@_provinceList"
-                        @bind-Value="@cvPlan.AddressInfo.ProvinceId"
-                        LabelName="@nameof(AddressModel.Province)"
-                        ValueName="@nameof(AddressModel.ProvinceId)"
-                        Placeholder="Chọn tỉnh"
-                        EnableSearch
-                        OnBlur="OnBlur"
-                        OnFocus="OnFocus"
-                        OnSelectedItemChanged="ProvinceSelectedItemChanged"
-                        OnSearch="OnSearch">
-                </Select>
-            </AntDesign.Col>
-            <AntDesign.Col Class="gutter-row" Span="8">
-                <Select DataSource="@_districtList"
-                        @bind-Value="@cvPlan.AddressInfo.DistrictId"
-                        LabelName="@nameof(AddressModel.District)"
-                        ValueName="@nameof(AddressModel.DistrictId)"
-                        Placeholder="Chọn quận / huyện"
-                        EnableSearch
-                        OnBlur="OnBlur"
-                        OnFocus="OnFocus"
-                        OnSelectedItemChanged="DistrictSelectedItemChanged"
-                        OnSearch="OnSearch">
-                </Select>
-            </AntDesign.Col>
-            <AntDesign.Col Class="gutter-row" Span="8">
-                <Select DataSource="@_communeList"
-                        @bind-Value="@cvPlan.AddressInfo.CommuneId"
-                        LabelName="@nameof(AddressModel.Commune)"
-                        ValueName="@nameof(AddressModel.CommuneId)"
-                        Placeholder="Chọn xã / phường"
-                        EnableSearch
-                        OnBlur="OnBlur"
-                        OnFocus="OnFocus"
-                        OnSelectedItemChanged="CommunueSelectedItemChanged"
-                        OnSearch="OnSearch">
-                </Select>
-            </AntDesign.Col>
-        </Row>
-    </FormItem>
-
-    <FormItem Label="Chi tiết">
-        <TextArea @bind-Value="@cvPlan.AddressDetail" />
-    </FormItem>
-
-
-    @*<FormItem Label="DatePicker">
-            <DatePicker @bind-Value="@context.DatePicker" />
+        <FormItem Label="Worker Id">
+            @*<Input @bind-Value="@cvInfo.PlanDisplay.WorkerId" />*@
+            <Search Placeholder="Nhập mã worker" EnterButton="@("Search")" @bind-Value="@cvPlan.WorkerId" OnSearch="SearchWorker" />
         </FormItem>
-        <FormItem Label="RangePicker">
-            <RangePicker @bind-Value="@context.RangePicker" />
+        <FormItem Label="Họ tên">
+            <Input @bind-Value="@cvPlan.WorkerInfo.FullName" />
         </FormItem>
-        <FormItem Label="InputNumber">
-            <AntDesign.InputNumber @bind-Value="@context.Number" />
+        <FormItem Label="Phòng ban / Xưởng">
+            <Input @bind-Value="@cvPlan.WorkerInfo.SectionName" />
         </FormItem>
-        <FormItem Label="Switch">
-            <Switch @bind-Value="@context.Switch" />
-        </FormItem>*@
-    <FormItem Label="Tình trạng sức khỏe">
-        <RadioGroup @bind-Value="@cvPlan.HealthStatus">
-            <Radio RadioButton Value="@("Khỏe mạnh")">Khỏe mạnh</Radio>
-            <Radio RadioButton Value="@("Ho, sốt")">Ho, sốt</Radio>
-            <Radio RadioButton Value="@("Đau nhức mỏi cơ thể")">Đau nhức mỏi cơ thể</Radio>
-            <Radio RadioButton Value="@("Khác")">Khác</Radio>
-        </RadioGroup>
-    </FormItem>
+        <FormItem Label="Chuyền">
+            <Input @bind-Value="@cvPlan.WorkerInfo.LineName" />
+        </FormItem>
+        <FormItem Label="Số điện thoại">
+            <Input @bind-Value="@cvPlan.PhoneNumber" />
+        </FormItem>
 
-    <FormItem Label="Thông tin thêm">
-        <p>Thông tin thêm</p>
-    </FormItem>
+        <FormItem Label="Địa chỉ hiện tại">
+            <Row Gutter="16">
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    Thành phố (Tỉnh)
+                </AntDesign.Col>
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    Quận (Huyện)
+                </AntDesign.Col>
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    Thị trấn / Phường / Xã
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="16">
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    <Select DataSource="@_provinceList"
+                            @bind-Value="@cvPlan.AddressInfo.ProvinceId"
+                            LabelName="@nameof(AddressModel.Province)"
+                            ValueName="@nameof(AddressModel.ProvinceId)"
+                            Placeholder="Chọn tỉnh"
+                            EnableSearch
+                            OnBlur="OnBlur"
+                            OnFocus="OnFocus"
+                            OnSelectedItemChanged="ProvinceSelectedItemChanged"
+                            OnSearch="OnSearch">
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    <Select DataSource="@_districtList"
+                            @bind-Value="@cvPlan.AddressInfo.DistrictId"
+                            LabelName="@nameof(AddressModel.District)"
+                            ValueName="@nameof(AddressModel.DistrictId)"
+                            Placeholder="Chọn quận / huyện"
+                            EnableSearch
+                            OnBlur="OnBlur"
+                            OnFocus="OnFocus"
+                            OnSelectedItemChanged="DistrictSelectedItemChanged"
+                            OnSearch="OnSearch">
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Class="gutter-row" Span="8">
+                    <Select DataSource="@_communeList"
+                            @bind-Value="@cvPlan.AddressInfo.CommuneId"
+                            LabelName="@nameof(AddressModel.Commune)"
+                            ValueName="@nameof(AddressModel.CommuneId)"
+                            Placeholder="Chọn xã / phường"
+                            EnableSearch
+                            OnBlur="OnBlur"
+                            OnFocus="OnFocus"
+                            OnSelectedItemChanged="CommunueSelectedItemChanged"
+                            OnSearch="OnSearch">
+                    </Select>
+                </AntDesign.Col>
+            </Row>
+        </FormItem>
 
-    <FormItem WrapperColOffset="6" WrapperColSpan="12">
-        <Button Size="large" type="primary" OnClick="CreateNewCovidPlan">
-            Lưu
-        </Button>
-    </FormItem>
+        <FormItem Label="Chi tiết">
+            <TextArea @bind-Value="@cvPlan.AddressDetail" />
+        </FormItem>
 
-</Form>
-<p>@_addressSelected?.Province-@_addressSelected?.District - @_addressSelected?.Commune</p>
-<p>@msg</p>
+
+        @*<FormItem Label="DatePicker">
+                <DatePicker @bind-Value="@context.DatePicker" />
+            </FormItem>
+            <FormItem Label="RangePicker">
+                <RangePicker @bind-Value="@context.RangePicker" />
+            </FormItem>
+            <FormItem Label="InputNumber">
+                <AntDesign.InputNumber @bind-Value="@context.Number" />
+            </FormItem>
+            <FormItem Label="Switch">
+                <Switch @bind-Value="@context.Switch" />
+            </FormItem>*@
+        <FormItem Label="Tình trạng sức khỏe">
+            <RadioGroup @bind-Value="@cvPlan.HealthStatus">
+                <Radio RadioButton Value="@("Khỏe mạnh")">Khỏe mạnh</Radio>
+                <Radio RadioButton Value="@("Ho, sốt")">Ho, sốt</Radio>
+                <Radio RadioButton Value="@("Đau nhức mỏi cơ thể")">Đau nhức mỏi cơ thể</Radio>
+                <Radio RadioButton Value="@("Khác")">Khác</Radio>
+            </RadioGroup>
+        </FormItem>
+
+        <FormItem Label="Thông tin thêm">
+            <p>Thông tin thêm</p>
+        </FormItem>
+
+        <FormItem WrapperColOffset="6" WrapperColSpan="12">
+            <Button Size="large" type="primary" OnClick="CreateNewCovidPlan">
+                Lưu
+            </Button>
+        </FormItem>
+
+    </Form>
+    
+    <p>@_addressSelected?.Province-@_addressSelected?.District - @_addressSelected?.Commune</p>
+    <p>@msg</p>
+</Spin>
 
 @code {
+    private bool _loading = true;
     private HubConnection hubConnection;
     CovidPlanModel cvPlan = new CovidPlanModel {
         WorkerInfo = new WorkerModel(),
@@ -135,10 +141,15 @@
     AddressModel _addressSelected;
     string msg;
 
+
     protected override async Task OnInitializedAsync()
     {
-        addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
-        workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+        //addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
+        //workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        _loading = true;
+        addresses = workerAddressState.Addresses;
+        workers = workerAddressState.Workers;
 
         var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
         foreach (var prvId in provinceIdList)
@@ -152,12 +163,17 @@
         .Build();
 
         await hubConnection.StartAsync();
+
+        _loading = false;
     }
 
-    protected void SearchWorker()
+    protected async void SearchWorker()
     {
         if (string.IsNullOrEmpty(cvPlan.WorkerId))
             return;
+
+        string workerId = cvPlan.WorkerId;
+        var x = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans?workerId=" + workerId);
 
         // Search workerInfo, CovidPlan
         var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
@@ -170,6 +186,8 @@
 
     protected async Task CreateNewCovidPlan()
     {
+        _loading = true;
+
         cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         cvPlan.AddressInfo = _addressSelected;
         cvPlan.AddressId = _addressSelected.AddressId;
@@ -177,7 +195,15 @@
 
         await Http.PostAsJsonAsync("api/covidplans", cvPlan);
         if (IsConnected) await SendMessage();
-        NavigationManager.NavigateTo("covidplanlist");
+
+        cvPlan = new CovidPlanModel
+        {
+            WorkerInfo = new WorkerModel(),
+            AddressInfo = new AddressModel()
+        };
+        _loading = false;
+
+        //NavigationManager.NavigateTo("covidplanlist");
     }
 
     Task SendMessage() => hubConnection.SendAsync("SendMessage");

@@ -103,6 +103,13 @@ using SVSignalR.Shared.Models;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 5 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\AddCovidPlan.razor"
+using SVSignalR.Shared.AppData;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/addcovidplan")]
     public partial class AddCovidPlan : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -112,8 +119,9 @@ using SVSignalR.Shared.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 126 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\AddCovidPlan.razor"
+#line 131 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\AddCovidPlan.razor"
        
+    private bool _loading = true;
     private HubConnection hubConnection;
     CovidPlanModel cvPlan = new CovidPlanModel {
         WorkerInfo = new WorkerModel(),
@@ -125,10 +133,15 @@ using SVSignalR.Shared.Models;
     AddressModel _addressSelected;
     string msg;
 
+
     protected override async Task OnInitializedAsync()
     {
-        addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
-        workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+        //addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
+        //workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+
+        _loading = true;
+        addresses = workerAddressState.Addresses;
+        workers = workerAddressState.Workers;
 
         var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
         foreach (var prvId in provinceIdList)
@@ -142,12 +155,17 @@ using SVSignalR.Shared.Models;
         .Build();
 
         await hubConnection.StartAsync();
+
+        _loading = false;
     }
 
-    protected void SearchWorker()
+    protected async void SearchWorker()
     {
         if (string.IsNullOrEmpty(cvPlan.WorkerId))
             return;
+
+        string workerId = cvPlan.WorkerId;
+        var x = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans?workerId=" + workerId);
 
         // Search workerInfo, CovidPlan
         var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
@@ -160,6 +178,8 @@ using SVSignalR.Shared.Models;
 
     protected async Task CreateNewCovidPlan()
     {
+        _loading = true;
+
         cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         cvPlan.AddressInfo = _addressSelected;
         cvPlan.AddressId = _addressSelected.AddressId;
@@ -167,7 +187,15 @@ using SVSignalR.Shared.Models;
 
         await Http.PostAsJsonAsync("api/covidplans", cvPlan);
         if (IsConnected) await SendMessage();
-        NavigationManager.NavigateTo("covidplanlist");
+
+        cvPlan = new CovidPlanModel
+        {
+            WorkerInfo = new WorkerModel(),
+            AddressInfo = new AddressModel()
+        };
+        _loading = false;
+
+        //NavigationManager.NavigateTo("covidplanlist");
     }
 
     Task SendMessage() => hubConnection.SendAsync("SendMessage");
@@ -235,6 +263,7 @@ using SVSignalR.Shared.Models;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private WorkerAddressState workerAddressState { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private HttpClient Http { get; set; }
     }

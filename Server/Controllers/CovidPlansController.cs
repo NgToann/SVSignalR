@@ -29,11 +29,24 @@ namespace SVSignalR.Server.Controllers
         }
 
         // GET: api/CovidPlans/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModel(string id)
-        {
-            var covidPlanModel = await _context.CovidPlanList.FindAsync(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModel(string id)
+        //{
+        //    var covidPlanModel = await _context.CovidPlanList.FindAsync(id);
 
+        //    if (covidPlanModel == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return covidPlanModel;
+        //}
+
+        // GET: api/CovidPlans/workerId=?
+        [HttpGet("{workerId}")]
+        public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModelByWorkerId(string workerId)
+        {
+            var covidPlanModel = await _context.CovidPlanList.FirstOrDefaultAsync(f => f.WorkerId == workerId);
             if (covidPlanModel == null)
             {
                 return NotFound();
@@ -41,6 +54,7 @@ namespace SVSignalR.Server.Controllers
 
             return covidPlanModel;
         }
+
 
         // PUT: api/CovidPlans/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

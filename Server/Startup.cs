@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using SVSignalR.Server.Data;
 using SVSignalR.Server.Hubs;
 using System.Linq;
+using SVSignalR.Shared.AppData;
 
 namespace SVSignalR.Server
 {
@@ -28,6 +29,7 @@ namespace SVSignalR.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSignalR();
+            services.AddSingleton<WorkerAddressState>();
             services.AddDbContext<SVSignalRContext>(context => context.UseSqlServer(Configuration.GetConnectionString("SaovietConnection")));
             services.AddResponseCompression(opts =>
             {
