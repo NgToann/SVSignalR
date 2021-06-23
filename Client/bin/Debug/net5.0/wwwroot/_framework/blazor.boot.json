@@ -207,12 +207,12 @@
       "netstandard.dll": "sha256-zDt6ZaAbtKh1rxzQ7CMtlli234CuRfzZU6Fe9cc2FG4=",
       "System.Private.CoreLib.dll": "sha256-KRDEW\/5qbC0\/9M5IbDGIAM1sKCutWHyq9oLl8WW0c3I=",
       "SVSignalR.Shared.dll": "sha256-1BPidoyQd5zHst5Nu0WoqpHXHwCeni0406UVnOxGXtA=",
-      "SVSignalR.Client.dll": "sha256-OcfCkFPdubWtHdZ4m8pNHqqbbEgdDN7oWRWScd4q2Ck="
+      "SVSignalR.Client.dll": "sha256-BD5VDBZKBitN8+fAHAVSyGBo0WHIxLOOg47vvbQb3kg="
     },
     "lazyAssembly": null,
     "pdb": {
       "SVSignalR.Shared.pdb": "sha256-+g6aIzgLxYuYa5+wTKzaZLeit5wwbaIcNc07ixW3Yoo=",
-      "SVSignalR.Client.pdb": "sha256-Cfje6djqMyOt\/5NPLuAi4q4JYCIVphX3zZua7pNRlww="
+      "SVSignalR.Client.pdb": "sha256-lxY+fPoPfhKbQVszGP\/zIaf2PgNjeVwGiVZ0hJ\/4+C8="
     },
     "runtime": {
       "dotnet.timezones.blat": "sha256-\/mwFhTTF4Kca8PG7G6rxaGqCueWH9XbWEIK1Fm8GbFg=",

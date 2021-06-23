@@ -83,6 +83,13 @@ using SVSignalR.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 11 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\_Imports.razor"
+using AntDesign;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 2 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\FetchData.razor"
 using SVSignalR.Shared;
 

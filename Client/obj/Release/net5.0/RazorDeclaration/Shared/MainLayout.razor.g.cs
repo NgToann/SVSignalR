@@ -82,6 +82,13 @@ using SVSignalR.Client.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\_Imports.razor"
+using AntDesign;
+
+#line default
+#line hidden
+#nullable disable
     public partial class MainLayout : LayoutComponentBase
     {
         #pragma warning disable 1998
@@ -89,6 +96,62 @@ using SVSignalR.Client.Shared;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 5 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Shared\MainLayout.razor"
+       
+    EmbeddedProperty Property(int span, int offset) => new() { Span = span, Offset = offset };
+    RenderFragment sub2Title =
+    
+
+#line default
+#line hidden
+#nullable disable
+        (__builder2) => {
+            __builder2.AddMarkupContent(0, "<span b-w61u7ywuhc>\r\n        <Icon Type=\"schedule\" Theme=\"outline\" b-w61u7ywuhc></Icon>\r\n        <span b-w61u7ywuhc> Managment</span>\r\n    </span>");
+        }
+#nullable restore
+#line 11 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Shared\MainLayout.razor"
+           ;
+
+RenderFragment outsoleTitle =
+
+#line default
+#line hidden
+#nullable disable
+        (__builder2) => {
+            __builder2.AddMarkupContent(1, "<span b-w61u7ywuhc>\r\n    <Icon Type=\"sisternode\" Theme=\"outline\" b-w61u7ywuhc></Icon>\r\n    <span b-w61u7ywuhc> Outsole</span>\r\n</span>");
+        }
+#nullable restore
+#line 17 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Shared\MainLayout.razor"
+       ;
+
+private RenderFragment _text =
+
+#line default
+#line hidden
+#nullable disable
+        (__builder2) => {
+            __builder2.AddMarkupContent(2, "<span b-w61u7ywuhc>User: Admin</span>");
+        }
+#nullable restore
+#line 19 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Shared\MainLayout.razor"
+                                                       ;
+
+private RenderFragment _content =
+
+#line default
+#line hidden
+#nullable disable
+        (__builder2) => {
+            __builder2.AddMarkupContent(3, "<div b-w61u7ywuhc>\r\n    <Button Type=\"primary\" b-w61u7ywuhc>Logout !</Button>\r\n</div>");
+        }
+#nullable restore
+#line 24 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Shared\MainLayout.razor"
+      ;
+
+#line default
+#line hidden
+#nullable disable
     }
 }
 #pragma warning restore 1591

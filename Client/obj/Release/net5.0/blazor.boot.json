@@ -7,8 +7,10 @@
   "linkerEnabled": false,
   "resources": {
     "assembly": {
+      "AntDesign.dll": "sha256-JqgOznZo4SUJDF7TXMFv\/n8NdErkFwZpo83zBqW6UVI=",
       "Microsoft.AspNetCore.Authorization.dll": "sha256-kc2VPvpVo2nTNaP8zwT2XM7j0zgRIkQytHYxFzW2XAE=",
       "Microsoft.AspNetCore.Components.dll": "sha256-NPVu9TiPMad4eIdUMD4DshGwyPEoy2VgddHYPYzK2AI=",
+      "Microsoft.AspNetCore.Components.DataAnnotations.Validation.dll": "sha256-VGaB03HIjFg4jeK7BomIFzlhhY3vW5N+jWuRqZkbJsY=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-eewMvS4jcQbQjRdJEeA+5oJzuhK3lpp0aJqGOZzyEB4=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-WTueeagUpF\/sL4iXBtyXPueSJ5WHana51FCIUbYLaF0=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-W1VSTl7qsJbBuFuhk5k+YGXtEO9WFkg9uNiBeVYQnfs=",
@@ -37,6 +39,7 @@
       "Microsoft.Extensions.Primitives.dll": "sha256-XNHVw5siarTMMQ009PdQgD7MrQ0iqnJ92cJOWSSE1vs=",
       "Microsoft.JSInterop.dll": "sha256-WNtvSVKeBJshuvQBXMrnytFHgfCNoU67w7uou3Jcz8w=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-D\/H0cYPGORjCt+3sLCM+KB0lVo8i\/fKjVi2cMhJM1YQ=",
+      "OneOf.dll": "sha256-K99lDyL6VrtTDYGRk5o+Q3caW25Uogee\/1e7aIvpgLY=",
       "System.IO.Pipelines.dll": "sha256-3ET+mpR7F058YRj9YaLHOVXBqOW6iUxtIpeiKPYw4PA=",
       "Microsoft.CSharp.dll": "sha256-RwHOXAHu60tsem6jZqjdeRmnOOwHbjnFn2t0veTzOrM=",
       "Microsoft.VisualBasic.Core.dll": "sha256-las92nHFBGOENVThQcbyYVgzzXuewEC9iMv+CWGrRSc=",
@@ -203,12 +206,12 @@
       "mscorlib.dll": "sha256-pfURHvguun0aGHBikgqj1tcIC9yVwDja+omBjH9K0WU=",
       "netstandard.dll": "sha256-zDt6ZaAbtKh1rxzQ7CMtlli234CuRfzZU6Fe9cc2FG4=",
       "System.Private.CoreLib.dll": "sha256-KRDEW\/5qbC0\/9M5IbDGIAM1sKCutWHyq9oLl8WW0c3I=",
-      "SVSignalR.Shared.dll": "sha256-oQ8VK9BenawZiEZ68khEuv0\/+9hjYHI3zDIS2fah7ZE=",
-      "SVSignalR.Client.dll": "sha256-DGXeQX+c629nFdIi6o4xOsMadH5oRd+LRUzLbpQ7JHE="
+      "SVSignalR.Shared.dll": "sha256-QV59fARmDWVkYHqvz5KHqL8Z9wL0m9lZJA60xWtkjCQ=",
+      "SVSignalR.Client.dll": "sha256-8egYDMUQAXVDvBxG+r9O2+8P63vBZCdok8KZWP0EpNs="
     },
     "lazyAssembly": null,
     "pdb": {
-      "SVSignalR.Client.pdb": "sha256-22gIogxw2qn\/6de5o5kUUCxinx3fNK5W4KkZ2LQlMlE="
+      "SVSignalR.Client.pdb": "sha256-ZrNMQ9Hl06Qn28NyLF2bPKC+m7rWO2SesRokEnJ7JjI="
     },
     "runtime": {
       "dotnet.timezones.blat": "sha256-\/mwFhTTF4Kca8PG7G6rxaGqCueWH9XbWEIK1Fm8GbFg=",

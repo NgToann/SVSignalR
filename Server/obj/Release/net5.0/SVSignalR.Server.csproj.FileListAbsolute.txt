@@ -193,3 +193,6 @@ C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\obj\Release\net5.0\SVSignalR
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\obj\Release\net5.0\ref\SVSignalR.Server.dll
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\obj\Release\net5.0\SVSignalR.Server.pdb
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\obj\Release\net5.0\SVSignalR.Server.genruntimeconfig.cache
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Release\net5.0\AntDesign.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Release\net5.0\Microsoft.AspNetCore.Components.DataAnnotations.Validation.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Release\net5.0\OneOf.dll

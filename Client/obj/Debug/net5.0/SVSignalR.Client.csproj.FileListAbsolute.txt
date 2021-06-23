@@ -679,3 +679,9 @@ C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\RazorDeclar
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\RazorDeclaration\Pages\CovidPlanComponent\CovidPlanList.razor.g.cs
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\Razor\Pages\CovidPlanComponent\AddCovidPlan.razor.g.cs
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\Razor\Pages\CovidPlanComponent\CovidPlanList.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\RazorDeclaration\Pages\CovidPlanComponent\EditCovidPlan.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\Razor\Pages\CovidPlanComponent\EditCovidPlan.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Outsole\ConfirmOSMaterial.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\Razor\Pages\Outsole\ConfirmOSMaterial.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Outsole\ReleaseOSMaterial.razor.g.cs
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Debug\net5.0\Razor\Pages\Outsole\ReleaseOSMaterial.razor.g.cs

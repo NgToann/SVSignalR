@@ -75,6 +75,10 @@ private RenderFragment _content =
                             <span class="nav-text">Reports</span>
                         </MenuItem>*@
                         @*<MenuItem RouterLink="login" Key="11"><Icon Type="user" Theme="outline" />User</MenuItem>*@
+                        <SubMenu Key="sub2" TitleTemplate=@outsoleTitle>
+                            <MenuItem RouterLink="confirm-material" Key="7"><Icon Type="appstore-add" Theme="outline" /> Confirm Material</MenuItem>
+                            <MenuItem RouterLink="release-material" Key="8"><Icon Type="block" Theme="outline" /> Release Material</MenuItem>
+                        </SubMenu>
                         <MenuItem RouterLink="listbooks" Key="11"><Icon Type="wechat" Theme="outline" />List Books</MenuItem>
                         @*<MenuItem RouterLink="covid-plan" Key="12"><Icon Type="appstore-add" Theme="outline" />Covid Plan</MenuItem>*@
                         <MenuItem RouterLink="covidplanlist" Key="13"><Icon Type="partition" Theme="outline" />Covid Plan List</MenuItem>

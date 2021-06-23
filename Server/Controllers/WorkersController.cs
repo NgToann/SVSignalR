@@ -27,6 +27,11 @@ namespace SVSignalR.Server.Controllers
         {
             return await _context.Workers.ToListAsync();
         }
+        [HttpGet("dept/{deptId}")]
+        public async Task<ActionResult<IEnumerable<WorkerModel>>> GetWorkersByDepartment(string deptId)
+        {
+            return await _context.Workers.Where(w => w.SectionName.Contains(deptId)).ToListAsync();
+        }
 
         // GET: api/Workers/5
         [HttpGet("{id}")]

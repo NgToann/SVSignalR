@@ -26,5 +26,4 @@
     <ProjectReference Include="..\Shared\SVSignalR.Shared.csproj" />
   </ItemGroup>
 
-
 </Project>

@@ -2,4 +2,5 @@
   <ContentRoot BasePath="/" Path="C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\bin\Release\net5.0\wwwroot\" />
   <ContentRoot BasePath="/" Path="C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\obj\Release\net5.0\scopedcss\bundle\" />
   <ContentRoot BasePath="/" Path="C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\wwwroot\" />
+  <ContentRoot BasePath="_content/AntDesign" Path="C:\Users\PhucNguyen\.nuget\packages\antdesign\0.8.2\build\..\staticwebassets\" />
 </StaticWebAssets>

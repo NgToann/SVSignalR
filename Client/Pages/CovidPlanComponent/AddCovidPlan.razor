@@ -7,7 +7,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject WorkerAddressState workerAddressState
-
+@inject NotificationService _notice;
 <h3>Add Covid Plan</h3>
 <Spin Spinning="@_loading">
     <Form Model="@cvPlan"
@@ -54,7 +54,7 @@
                             OnBlur="OnBlur"
                             OnFocus="OnFocus"
                             OnSelectedItemChanged="ProvinceSelectedItemChanged"
-                            OnSearch="OnSearch">
+                            OnSearch="OnSearchAddress">
                     </Select>
                 </AntDesign.Col>
                 <AntDesign.Col Class="gutter-row" Span="8">
@@ -67,7 +67,7 @@
                             OnBlur="OnBlur"
                             OnFocus="OnFocus"
                             OnSelectedItemChanged="DistrictSelectedItemChanged"
-                            OnSearch="OnSearch">
+                            OnSearch="OnSearchAddress">
                     </Select>
                 </AntDesign.Col>
                 <AntDesign.Col Class="gutter-row" Span="8">
@@ -80,7 +80,7 @@
                             OnBlur="OnBlur"
                             OnFocus="OnFocus"
                             OnSelectedItemChanged="CommunueSelectedItemChanged"
-                            OnSearch="OnSearch">
+                            OnSearch="OnSearchAddress">
                     </Select>
                 </AntDesign.Col>
             </Row>
@@ -90,19 +90,19 @@
             <TextArea @bind-Value="@cvPlan.AddressDetail" />
         </FormItem>
 
-
         @*<FormItem Label="DatePicker">
-                <DatePicker @bind-Value="@context.DatePicker" />
-            </FormItem>
-            <FormItem Label="RangePicker">
-                <RangePicker @bind-Value="@context.RangePicker" />
-            </FormItem>
-            <FormItem Label="InputNumber">
-                <AntDesign.InputNumber @bind-Value="@context.Number" />
-            </FormItem>
-            <FormItem Label="Switch">
-                <Switch @bind-Value="@context.Switch" />
-            </FormItem>*@
+            <DatePicker @bind-Value="@context.DatePicker" />
+        </FormItem>
+        <FormItem Label="RangePicker">
+            <RangePicker @bind-Value="@context.RangePicker" />
+        </FormItem>
+        <FormItem Label="InputNumber">
+            <AntDesign.InputNumber @bind-Value="@context.Number" />
+        </FormItem>
+        <FormItem Label="Switch">
+            <Switch @bind-Value="@context.Switch" />
+        </FormItem>*@
+
         <FormItem Label="Tình trạng sức khỏe">
             <RadioGroup @bind-Value="@cvPlan.HealthStatus">
                 <Radio RadioButton Value="@("Khỏe mạnh")">Khỏe mạnh</Radio>
@@ -117,15 +117,15 @@
         </FormItem>
 
         <FormItem WrapperColOffset="6" WrapperColSpan="12">
-            <Button Size="large" type="primary" OnClick="CreateNewCovidPlan">
+            <Button style="padding: 0px 10px; font-weight:bold;" type="primary" OnClick="CreateNewCovidPlan">
                 Lưu
             </Button>
         </FormItem>
-
     </Form>
     
-    <p>@_addressSelected?.Province-@_addressSelected?.District - @_addressSelected?.Commune</p>
-    <p>@msg</p>
+    @*<p>@_addressSelected?.Province-@_addressSelected?.District - @_addressSelected?.Commune</p>
+    <p>@msg</p>*@
+
 </Spin>
 
 @code {
@@ -141,15 +141,22 @@
     AddressModel _addressSelected;
     string msg;
 
-
     protected override async Task OnInitializedAsync()
     {
-        //addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
-        //workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+        //if (workerAddressState != null)
+        if (workerAddressState.Addresses != null && workerAddressState.Workers != null)
+        {
+            addresses = workerAddressState.Addresses;
+            workers = workerAddressState.Workers;
+        }
+        else
+        {
+            addresses = await Http.GetFromJsonAsync<AddressModel[]>("api/addresses");
+            workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
+        }
+
 
         _loading = true;
-        addresses = workerAddressState.Addresses;
-        workers = workerAddressState.Workers;
 
         var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
         foreach (var prvId in provinceIdList)
@@ -172,15 +179,29 @@
         if (string.IsNullOrEmpty(cvPlan.WorkerId))
             return;
 
-        string workerId = cvPlan.WorkerId;
-        var x = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans?workerId=" + workerId);
-
-        // Search workerInfo, CovidPlan
+        // Search covidPlan
+        //var checkExistPlan = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans/plan/" + cvPlan.WorkerId);
         var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
+        // Search workerInfo, CovidPlan
         if (workerInfo != null)
         {
             cvPlan.WorkerId = workerInfo.WorkerId;
             cvPlan.WorkerInfo = workerInfo;
+        }
+        //if (checkExistPlan != null)
+        //{
+        //    checkExistPlan.WorkerInfo = workerInfo;
+        //    checkExistPlan.AddressInfo = addresses.FirstOrDefault(f => f.AddressId == checkExistPlan.AddressId);
+        //    cvPlan = checkExistPlan;
+        //}
+        //else
+        //{
+
+        //}
+
+        if (workerAddressState.Addresses.Length != addresses.Length)
+        {
+
         }
     }
 
@@ -188,12 +209,22 @@
     {
         _loading = true;
 
-        cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         cvPlan.AddressInfo = _addressSelected;
         cvPlan.AddressId = _addressSelected.AddressId;
         cvPlan.CreatedTime = DateTime.Now;
 
-        await Http.PostAsJsonAsync("api/covidplans", cvPlan);
+        cvPlan.CovidPlanId = Guid.NewGuid().ToString();
+        var postRespone = await Http.PostAsJsonAsync("api/covidplans", cvPlan);
+        if (postRespone.IsSuccessStatusCode)
+        {
+            await NoticeWithIcon(NotificationType.Success, "Info", "Successfully !");
+        }
+        else
+        {
+            await NoticeWithIcon(NotificationType.Error, "Error", postRespone.StatusCode.ToString());
+        }
+        _loading = false;
+
         if (IsConnected) await SendMessage();
 
         cvPlan = new CovidPlanModel
@@ -201,8 +232,6 @@
             WorkerInfo = new WorkerModel(),
             AddressInfo = new AddressModel()
         };
-        _loading = false;
-
         //NavigationManager.NavigateTo("covidplanlist");
     }
 
@@ -263,8 +292,18 @@
 
     }
 
-    private void OnSearch(string value)
+    private void OnSearchAddress(string value)
     {
 
+    }
+
+    private async Task NoticeWithIcon(NotificationType type, string msg, string desc)
+    {
+        await _notice.Open(new NotificationConfig()
+        {
+            Message = msg,
+            Description = desc,
+            NotificationType = type
+        });
     }
 }

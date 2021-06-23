@@ -42,6 +42,39 @@ namespace SVSignalR.Server.Controllers
             return addressModel;
         }
 
+        [HttpGet("provinceIds")]
+        public async Task<ActionResult<IEnumerable<string>>> GetProvinces()
+        {
+            var provinceIds = _context.Addresses.Select(s => s.ProvinceId).Distinct().ToListAsync();
+            if (provinceIds == null || provinceIds.Result.Count()==0)
+            {
+                return NotFound();
+            }
+            return await provinceIds;
+        }
+
+        [HttpGet("addresses/{provinceId}")]
+        public async Task<ActionResult<IEnumerable<AddressModel>>> GetProvinces(string provinceId)
+        {
+            var addresses = _context.Addresses.Where(w => w.ProvinceId == provinceId).ToListAsync();
+            if (addresses == null || addresses.Result.Count() == 0)
+            {
+                return NotFound();
+            }
+            return await addresses;
+        }
+
+        [HttpGet("addresses/{provinceId}/{districtId}")]
+        public async Task<ActionResult<IEnumerable<AddressModel>>> GetProvinces(string provinceId, string districtId)
+        {
+            var addresses = _context.Addresses.Where(w => w.ProvinceId == provinceId && w.DistrictId == districtId).ToListAsync();
+            if (addresses == null || addresses.Result.Count() == 0)
+            {
+                return NotFound();
+            }
+            return await addresses;
+        }
+
         // PUT: api/Address/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("{id}")]
