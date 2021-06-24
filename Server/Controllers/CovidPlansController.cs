@@ -25,6 +25,11 @@ namespace SVSignalR.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CovidPlanModel>>> GetCovidPlanList()
         {
+            foreach (var item in _context.CovidPlanList.ToList())
+            {
+                item.AddressInfo    = await _context.Addresses.FindAsync(item.AddressId);
+                item.WorkerInfo     = await _context.Workers.FindAsync(item.WorkerId);
+            }
             return await _context.CovidPlanList.ToListAsync();
         }
 
@@ -42,7 +47,7 @@ namespace SVSignalR.Server.Controllers
             return covidPlanModel;
         }
 
-        // GET: api/CovidPlans?workerId=a130
+        // GET: api/CovidPlans/plan/a130
         [HttpGet("plan/{workerId}")]
         public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModelByWorkerId(string workerId)
         {
@@ -131,5 +136,11 @@ namespace SVSignalR.Server.Controllers
         {
             return _context.CovidPlanList.Any(e => e.CovidPlanId == id);
         }
+        
+        //[HttpPatch]
+        //public async Task<bool> UpdateCVPlan (CovidPlanModel covidPlanModel)
+        //{
+        //    return true;
+        //}
     }
 }

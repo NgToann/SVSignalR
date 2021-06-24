@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SVSignalR.Server.Data;
 
 namespace SVSignalR.Server.Migrations
 {
     [DbContext(typeof(SVSignalRContext))]
-    partial class SVSignalRContextModelSnapshot : ModelSnapshot
+    [Migration("20210624080832_add order and sizerun table")]
+    partial class addorderandsizeruntable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

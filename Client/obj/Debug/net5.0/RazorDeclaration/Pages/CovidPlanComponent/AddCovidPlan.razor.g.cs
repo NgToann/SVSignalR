@@ -190,15 +190,13 @@ using SVSignalR.Shared.AppData;
         //{
 
         //}
-
-        if (workerAddressState.Addresses.Length != addresses.Length)
-        {
-
-        }
     }
 
     protected async Task CreateNewCovidPlan()
     {
+        if (cvPlan.WorkerId == null)
+            return;
+
         _loading = true;
 
         cvPlan.AddressInfo = _addressSelected;
@@ -207,9 +205,11 @@ using SVSignalR.Shared.AppData;
 
         cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         var postRespone = await Http.PostAsJsonAsync("api/covidplans", cvPlan);
+        if (IsConnected) await SendMessage();
+
         if (postRespone.IsSuccessStatusCode)
         {
-            await NoticeWithIcon(NotificationType.Success, "Info", "Successfully !");
+            await NoticeWithIcon(NotificationType.Success, "Info", $"{cvPlan.WorkerId} Saved !");
         }
         else
         {
@@ -217,13 +217,14 @@ using SVSignalR.Shared.AppData;
         }
         _loading = false;
 
-        if (IsConnected) await SendMessage();
 
         cvPlan = new CovidPlanModel
         {
             WorkerInfo = new WorkerModel(),
             AddressInfo = new AddressModel()
         };
+        _addressSelected = new AddressModel();
+
         //NavigationManager.NavigateTo("covidplanlist");
     }
 
