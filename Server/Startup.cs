@@ -31,6 +31,8 @@ namespace SVSignalR.Server
             services.AddSignalR();
             services.AddSingleton<WorkerAddressState>();
             services.AddDbContext<SVSignalRContext>(context => context.UseSqlServer(Configuration.GetConnectionString("SaovietConnection")));
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(

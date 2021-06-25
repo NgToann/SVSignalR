@@ -133,10 +133,7 @@ using System.Text.Json;
 
     AddressModel[] addresses;
     WorkerModel[] workers;
-
-    List<object> par = new List<object>();
-
-    List<CovidPlanDisplay> cvDisplays;
+    
     string msg;
 
     private HubConnection hubConnection;
@@ -177,26 +174,7 @@ using System.Text.Json;
         workerAddressState.Addresses = addresses;
         workerAddressState.Workers = workers;
 
-        cvDisplays = new List<CovidPlanDisplay>();
-        foreach (var cvPlan in cvPlans)
-        {
-            var workerById = workers.FirstOrDefault(f => f.WorkerId == cvPlan.WorkerId);
-            var addressById = addresses.FirstOrDefault(f => f.AddressId == cvPlan.AddressId);
-            cvDisplays.Add(new CovidPlanDisplay
-            {
-                WorkerId = cvPlan.WorkerId,
-                FullName = workerById.FullName,
-                SectionName = workerById.SectionName,
-                LineName = workerById.LineName,
-                PhoneNumber = cvPlan.PhoneNumber,
-                Address = String.Format("{0} / {1} / {2}", addressById.Commune, addressById.District, addressById.Province),
-                AddressDetail = cvPlan.AddressDetail,
-                HealthStatus = cvPlan.HealthStatus,
-                CreatedTime = cvPlan.CreatedTime
-            });
-        }
-
-        msg = $"Success:{JsonSerializer.Serialize(cvDisplays)}";
+        msg = $"Success:{JsonSerializer.Serialize(cvPlans)}";
 
         _loading = false;
 
@@ -209,19 +187,6 @@ using System.Text.Json;
     public void Dispose()
     {
         _ = hubConnection.DisposeAsync();
-    }
-
-    class CovidPlanDisplay
-    {
-        public string WorkerId { get; set; }
-        public string FullName { get; set; }
-        public string SectionName { get; set; }
-        public string LineName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public string AddressDetail { get; set; }
-        public string HealthStatus { get; set; }
-        public DateTime CreatedTime { get; set; }
     }
 
 #line default

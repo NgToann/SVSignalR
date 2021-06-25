@@ -25,33 +25,20 @@ namespace SVSignalR.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CovidPlanModel>>> GetCovidPlanList()
         {
-            foreach (var item in _context.CovidPlanList.ToList())
-            {
-                item.AddressInfo    = await _context.Addresses.FindAsync(item.AddressId);
-                item.WorkerInfo     = await _context.Workers.FindAsync(item.WorkerId);
-            }
-            return await _context.CovidPlanList.ToListAsync();
+            return await _context.CovidPlanList                                    
+                                    .Include(add => add.AddressInfo)
+                                    .OrderByDescending(o => o.CreatedTime)
+                                    .ToListAsync();
         }
 
         // GET: api/CovidPlans/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModel(string id)
         {
-            var covidPlanModel = await _context.CovidPlanList.FindAsync(id);
+            var covidPlanModel = await _context.CovidPlanList
+                                                .Include(add => add.AddressInfo)
+                                                .SingleOrDefaultAsync(s => s.WorkerId == id);
 
-            if (covidPlanModel == null)
-            {
-                return NotFound();
-            }
-
-            return covidPlanModel;
-        }
-
-        // GET: api/CovidPlans/plan/a130
-        [HttpGet("plan/{workerId}")]
-        public async Task<ActionResult<CovidPlanModel>> GetCovidPlanModelByWorkerId(string workerId)
-        {
-            var covidPlanModel = await _context.CovidPlanList.FirstOrDefaultAsync(f => f.WorkerId == workerId);
             if (covidPlanModel == null)
             {
                 return NotFound();
@@ -65,7 +52,7 @@ namespace SVSignalR.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCovidPlanModel(string id, CovidPlanModel covidPlanModel)
         {
-            if (id != covidPlanModel.CovidPlanId)
+            if (id != covidPlanModel.WorkerId)
             {
                 return BadRequest();
             }
@@ -96,24 +83,27 @@ namespace SVSignalR.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<CovidPlanModel>> PostCovidPlanModel(CovidPlanModel covidPlanModel)
         {
+            var address = covidPlanModel.AddressInfo;
+            _context.Entry(address).State = EntityState.Unchanged;
+            
             _context.CovidPlanList.Add(covidPlanModel);
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                if (CovidPlanModelExists(covidPlanModel.CovidPlanId))
+                if (CovidPlanModelExists(covidPlanModel.WorkerId))
                 {
                     return Conflict();
                 }
                 else
                 {
+                    var x = ex.Message.ToString();
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetCovidPlanModel", new { id = covidPlanModel.CovidPlanId }, covidPlanModel);
+            return CreatedAtAction("GetCovidPlanModel", new { id = covidPlanModel.WorkerId }, covidPlanModel);
         }
 
         // DELETE: api/CovidPlans/5
@@ -134,13 +124,7 @@ namespace SVSignalR.Server.Controllers
 
         private bool CovidPlanModelExists(string id)
         {
-            return _context.CovidPlanList.Any(e => e.CovidPlanId == id);
+            return _context.CovidPlanList.Any(e => e.WorkerId == id);
         }
-        
-        //[HttpPatch]
-        //public async Task<bool> UpdateCVPlan (CovidPlanModel covidPlanModel)
-        //{
-        //    return true;
-        //}
     }
 }

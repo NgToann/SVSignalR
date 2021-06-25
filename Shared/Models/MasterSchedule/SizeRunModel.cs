@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SVSignalR.Shared.Models.MasterSchedule
 {
@@ -20,6 +15,7 @@ namespace SVSignalR.Shared.Models.MasterSchedule
         public int Quantity { get; set; }
         public bool UpdateOutsoleSizeByArticle { get; set; }
 
+        [ForeignKey("ProductNo")]
         public OrderModel Order { get; set; }
     }
 }

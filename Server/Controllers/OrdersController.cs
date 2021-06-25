@@ -25,11 +25,23 @@ namespace SVSignalR.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderModel>>> GetOrders()
         {
-            //foreach (var item in _context.Orders.ToList())
-            //{
-            //    item.SizeRuns = _context.SizeRun.Where(w => w.ProductNo == item.ProductNo).ToList();
-            //}
-            return await _context.Orders.Where(w => w.IsEnable).ToListAsync();
+            return await _context.Orders
+                                .Include(size => size.SizeRuns)
+                                .AsNoTracking()
+                                .ToListAsync();
+
+            //return await _context.Orders.Where(w => w.IsEnable).ToListAsync();
+        }
+
+        // GET: api/Orders/108-7582/3.5
+        [HttpGet("{productNo}/{sizeNo}")]
+        public async Task<ActionResult<IEnumerable<OrderModel>>> GetOrdersByPOBySize(string productNo, string sizeNo)
+        {
+            return await _context.Orders
+                                .Include(size => size.SizeRuns.Where(sz => sz.SizeNo == sizeNo))
+                                .Where(od => od.ProductNo == productNo)
+                                .AsNoTracking()
+                                .ToListAsync();
         }
 
         // GET: api/Orders/192168-01
@@ -47,11 +59,16 @@ namespace SVSignalR.Server.Controllers
             return await _context.Orders.Where(w => w.ETD >= from && w.ETD <= to).ToListAsync();
         }
 
+        // GET: api/orders/
+
         // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderModel>> GetOrderModel(string id)
         {
-            var orderModel = await _context.Orders.FindAsync(id);
+            var orderModel = await _context.Orders
+                                    .Include(sz => sz.SizeRuns)
+                                    .AsNoTracking()
+                                    .SingleOrDefaultAsync(s => s.ProductNo == id);
 
             if (orderModel == null)
             {

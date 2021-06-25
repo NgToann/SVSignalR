@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "OhBIT96pwDJmzO+TA+YToJ/N9VkP7LUgxxq3X04BZNba8MwIgaLeKaVdqJ5ypgxKaYqUEKO1msicFyGWvlZYjA==",
+  "dgSpecHash": "LQbCe9eYeqiudg6FtXAf9OS8HwTsbJw+dIp8y41dnzunPMP4mLkLoNWlQlh0cAHVCLpznUriH8PDoduzEjCHpw==",
   "success": true,
   "projectFilePath": "C:\\Users\\PhucNguyen\\Desktop\\ms-tut\\SVSignalR\\Server\\SVSignalR.Server.csproj",
   "expectedPackageFiles": [
@@ -19,7 +19,9 @@
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.http.connections.client\\5.0.7\\microsoft.aspnetcore.http.connections.client.5.0.7.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.http.connections.common\\5.0.7\\microsoft.aspnetcore.http.connections.common.5.0.7.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.7\\microsoft.aspnetcore.http.features.5.0.7.nupkg.sha512",
+    "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\5.0.7\\microsoft.aspnetcore.jsonpatch.5.0.7.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.metadata\\5.0.7\\microsoft.aspnetcore.metadata.5.0.7.nupkg.sha512",
+    "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\5.0.7\\microsoft.aspnetcore.mvc.newtonsoftjson.5.0.7.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\5.0.0\\microsoft.aspnetcore.razor.language.5.0.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnetcore.razor.runtime\\2.2.0\\microsoft.aspnetcore.razor.runtime.2.2.0.nupkg.sha512",
@@ -87,7 +89,8 @@
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
-    "C:\\Users\\PhucNguyen\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\PhucNguyen\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\PhucNguyen\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\oneof\\2.1.155\\oneof.2.1.155.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\PhucNguyen\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",

@@ -19,19 +19,59 @@
             <Search Placeholder="Nhập mã worker" EnterButton="@("Search")" @bind-Value="@cvPlan.WorkerId" OnSearch="SearchWorker" />
         </FormItem>
         <FormItem Label="Họ tên">
-            <Input @bind-Value="@cvPlan.WorkerInfo.FullName" />
+            <Input @bind-Value="@cvPlan.FullName" />
         </FormItem>
         <FormItem Label="Phòng ban / Xưởng">
-            <Input @bind-Value="@cvPlan.WorkerInfo.SectionName" />
+            <Input @bind-Value="@cvPlan.SectionName" />
         </FormItem>
         <FormItem Label="Chuyền">
-            <Input @bind-Value="@cvPlan.WorkerInfo.LineName" />
+            <Input @bind-Value="@cvPlan.LineName" />
         </FormItem>
         <FormItem Label="Số điện thoại">
             <Input @bind-Value="@cvPlan.PhoneNumber" />
         </FormItem>
+        <Divider Text="Địa chỉ hiện tại" />
+        <FormItem Label="Tỉnh / Thành phố">
+            <Select DataSource="@_provinceList"
+                    @bind-Value="@cvPlan.AddressInfo.ProvinceId"
+                    LabelName="@nameof(AddressModel.Province)"
+                    ValueName="@nameof(AddressModel.ProvinceId)"
+                    Placeholder="Chọn tỉnh"
+                    EnableSearch
+                    OnBlur="OnBlur"
+                    OnFocus="OnFocus"
+                    OnSelectedItemChanged="ProvinceSelectedItemChanged"
+                    OnSearch="OnSearchAddress">
+            </Select>
+        </FormItem>
+        <FormItem  Label="Quận / Huyện">
+            <Select DataSource="@_districtList"
+                    @bind-Value="@cvPlan.AddressInfo.DistrictId"
+                    LabelName="@nameof(AddressModel.District)"
+                    ValueName="@nameof(AddressModel.DistrictId)"
+                    Placeholder="Chọn quận / huyện"
+                    EnableSearch
+                    OnBlur="OnBlur"
+                    OnFocus="OnFocus"
+                    OnSelectedItemChanged="DistrictSelectedItemChanged"
+                    OnSearch="OnSearchAddress">
+            </Select>
+        </FormItem>
+        <FormItem Label="Xã / Phường / Thị trấn">
+            <Select DataSource="@_communeList"
+                    @bind-Value="@cvPlan.AddressInfo.CommuneId"
+                    LabelName="@nameof(AddressModel.Commune)"
+                    ValueName="@nameof(AddressModel.CommuneId)"
+                    Placeholder="Chọn xã / phường"
+                    EnableSearch
+                    OnBlur="OnBlur"
+                    OnFocus="OnFocus"
+                    OnSelectedItemChanged="CommunueSelectedItemChanged"
+                    OnSearch="OnSearchAddress">
+            </Select>
+        </FormItem>
 
-        <FormItem Label="Địa chỉ hiện tại">
+        @*<FormItem Label="Địa chỉ hiện tại">
             <Row Gutter="16">
                 <AntDesign.Col Class="gutter-row" Span="8">
                     Thành phố (Tỉnh)
@@ -84,7 +124,7 @@
                     </Select>
                 </AntDesign.Col>
             </Row>
-        </FormItem>
+        </FormItem>*@
 
         <FormItem Label="Chi tiết">
             <TextArea @bind-Value="@cvPlan.AddressDetail" />
@@ -112,13 +152,9 @@
             </RadioGroup>
         </FormItem>
 
-        <FormItem Label="Thông tin thêm">
-            <p>Thông tin thêm</p>
-        </FormItem>
-
         <FormItem WrapperColOffset="6" WrapperColSpan="12">
-            <Button style="padding: 0px 10px; font-weight:bold;" type="primary" OnClick="CreateNewCovidPlan">
-                Lưu
+            <Button style="padding: 0px 10px; font-weight:bold;" Size="large" type="primary" OnClick="CreateNewCovidPlan">
+                Lưu dữ liệu
             </Button>
         </FormItem>
     </Form>
@@ -132,7 +168,6 @@
     private bool _loading = true;
     private HubConnection hubConnection;
     CovidPlanModel cvPlan = new CovidPlanModel {
-        WorkerInfo = new WorkerModel(),
         AddressInfo = new AddressModel()
     };
     AddressModel[] addresses;
@@ -155,7 +190,6 @@
             workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
         }
 
-
         _loading = true;
 
         var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
@@ -176,28 +210,30 @@
 
     protected async void SearchWorker()
     {
-        if (string.IsNullOrEmpty(cvPlan.WorkerId))
-            return;
+        cvPlan.FullName = "";
+        cvPlan.SectionName = "";
 
-        // Search covidPlan
-        //var checkExistPlan = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans/plan/" + cvPlan.WorkerId);
-        var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
-        // Search workerInfo, CovidPlan
-        if (workerInfo != null)
+        if (string.IsNullOrEmpty(cvPlan.WorkerId))
+        {
+            _loading = false;
+            return;
+        }
+
+        //var workerInfo = await Http.GetFromJsonAsync<WorkerModel>("api/workers/" + cvPlan.WorkerInfo.WorkerId);
+        var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.ToUpper());
+        var cvPlanExist = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans/" + cvPlan.WorkerId);
+        
+        if (cvPlanExist != null)
+        {
+            cvPlan = cvPlanExist;
+            _addressSelected = cvPlanExist.AddressInfo;
+        }
+        else if (workerInfo != null)
         {
             cvPlan.WorkerId = workerInfo.WorkerId;
-            cvPlan.WorkerInfo = workerInfo;
+            cvPlan.FullName = workerInfo.FullName;
+            cvPlan.SectionName = workerInfo.SectionName;
         }
-        //if (checkExistPlan != null)
-        //{
-        //    checkExistPlan.WorkerInfo = workerInfo;
-        //    checkExistPlan.AddressInfo = addresses.FirstOrDefault(f => f.AddressId == checkExistPlan.AddressId);
-        //    cvPlan = checkExistPlan;
-        //}
-        //else
-        //{
-
-        //}
     }
 
     protected async Task CreateNewCovidPlan()
@@ -206,29 +242,33 @@
             return;
 
         _loading = true;
+        cvPlan.CreatedTime  = DateTime.Now;
+        cvPlan.AddressInfo  = _addressSelected;
+        cvPlan.AddressId    = _addressSelected.AddressId;
 
-        cvPlan.AddressInfo = _addressSelected;
-        cvPlan.AddressId = _addressSelected.AddressId;
-        cvPlan.CreatedTime = DateTime.Now;
-
-        cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         var postRespone = await Http.PostAsJsonAsync("api/covidplans", cvPlan);
         if (IsConnected) await SendMessage();
 
         if (postRespone.IsSuccessStatusCode)
         {
-            await NoticeWithIcon(NotificationType.Success, "Info", $"{cvPlan.WorkerId} Saved !");
+            await NoticeWithIcon(NotificationType.Success, "Message", $"{cvPlan.WorkerId} Saved !");
         }
         else
         {
-            await NoticeWithIcon(NotificationType.Error, "Error", postRespone.StatusCode.ToString());
+            var putRespone = await Http.PutAsJsonAsync("api/covidplans/" + cvPlan.WorkerId, cvPlan);
+            if (putRespone.IsSuccessStatusCode)
+            {
+                await NoticeWithIcon(NotificationType.Success, "Message", $"{cvPlan.WorkerId} Updated !");
+            }
+            else
+            {
+                await NoticeWithIcon(NotificationType.Error, "Error", postRespone.StatusCode.ToString());
+            }
         }
         _loading = false;
 
-
         cvPlan = new CovidPlanModel
         {
-            WorkerInfo = new WorkerModel(),
             AddressInfo = new AddressModel()
         };
         _addressSelected = new AddressModel();
@@ -242,7 +282,9 @@
 
     public void Dispose()
     {
+        //Close Hub connection
         _ = hubConnection.DisposeAsync();
+
     }
 
     void Cancel()

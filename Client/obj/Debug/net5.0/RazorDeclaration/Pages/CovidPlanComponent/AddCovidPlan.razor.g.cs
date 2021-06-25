@@ -119,12 +119,11 @@ using SVSignalR.Shared.AppData;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 131 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\AddCovidPlan.razor"
+#line 167 "C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Client\Pages\CovidPlanComponent\AddCovidPlan.razor"
        
     private bool _loading = true;
     private HubConnection hubConnection;
     CovidPlanModel cvPlan = new CovidPlanModel {
-        WorkerInfo = new WorkerModel(),
         AddressInfo = new AddressModel()
     };
     AddressModel[] addresses;
@@ -147,7 +146,6 @@ using SVSignalR.Shared.AppData;
             workers = await Http.GetFromJsonAsync<WorkerModel[]>("api/workers");
         }
 
-
         _loading = true;
 
         var provinceIdList = addresses.Select(s => s.ProvinceId).Distinct().ToList();
@@ -168,28 +166,30 @@ using SVSignalR.Shared.AppData;
 
     protected async void SearchWorker()
     {
-        if (string.IsNullOrEmpty(cvPlan.WorkerId))
-            return;
+        cvPlan.FullName = "";
+        cvPlan.SectionName = "";
 
-        // Search covidPlan
-        //var checkExistPlan = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans/plan/" + cvPlan.WorkerId);
-        var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.Trim().ToUpper());
-        // Search workerInfo, CovidPlan
-        if (workerInfo != null)
+        if (string.IsNullOrEmpty(cvPlan.WorkerId))
+        {
+            _loading = false;
+            return;
+        }
+
+        //var workerInfo = await Http.GetFromJsonAsync<WorkerModel>("api/workers/" + cvPlan.WorkerInfo.WorkerId);
+        var workerInfo = workers.FirstOrDefault(f => f.WorkerId.ToUpper() == cvPlan.WorkerId.ToUpper());
+        var cvPlanExist = await Http.GetFromJsonAsync<CovidPlanModel>("api/covidplans/" + cvPlan.WorkerId);
+        
+        if (cvPlanExist != null)
+        {
+            cvPlan = cvPlanExist;
+            _addressSelected = cvPlanExist.AddressInfo;
+        }
+        else if (workerInfo != null)
         {
             cvPlan.WorkerId = workerInfo.WorkerId;
-            cvPlan.WorkerInfo = workerInfo;
+            cvPlan.FullName = workerInfo.FullName;
+            cvPlan.SectionName = workerInfo.SectionName;
         }
-        //if (checkExistPlan != null)
-        //{
-        //    checkExistPlan.WorkerInfo = workerInfo;
-        //    checkExistPlan.AddressInfo = addresses.FirstOrDefault(f => f.AddressId == checkExistPlan.AddressId);
-        //    cvPlan = checkExistPlan;
-        //}
-        //else
-        //{
-
-        //}
     }
 
     protected async Task CreateNewCovidPlan()
@@ -198,29 +198,33 @@ using SVSignalR.Shared.AppData;
             return;
 
         _loading = true;
+        cvPlan.CreatedTime  = DateTime.Now;
+        cvPlan.AddressInfo  = _addressSelected;
+        cvPlan.AddressId    = _addressSelected.AddressId;
 
-        cvPlan.AddressInfo = _addressSelected;
-        cvPlan.AddressId = _addressSelected.AddressId;
-        cvPlan.CreatedTime = DateTime.Now;
-
-        cvPlan.CovidPlanId = Guid.NewGuid().ToString();
         var postRespone = await Http.PostAsJsonAsync("api/covidplans", cvPlan);
         if (IsConnected) await SendMessage();
 
         if (postRespone.IsSuccessStatusCode)
         {
-            await NoticeWithIcon(NotificationType.Success, "Info", $"{cvPlan.WorkerId} Saved !");
+            await NoticeWithIcon(NotificationType.Success, "Message", $"{cvPlan.WorkerId} Saved !");
         }
         else
         {
-            await NoticeWithIcon(NotificationType.Error, "Error", postRespone.StatusCode.ToString());
+            var putRespone = await Http.PutAsJsonAsync("api/covidplans/" + cvPlan.WorkerId, cvPlan);
+            if (putRespone.IsSuccessStatusCode)
+            {
+                await NoticeWithIcon(NotificationType.Success, "Message", $"{cvPlan.WorkerId} Updated !");
+            }
+            else
+            {
+                await NoticeWithIcon(NotificationType.Error, "Error", postRespone.StatusCode.ToString());
+            }
         }
         _loading = false;
 
-
         cvPlan = new CovidPlanModel
         {
-            WorkerInfo = new WorkerModel(),
             AddressInfo = new AddressModel()
         };
         _addressSelected = new AddressModel();
@@ -234,7 +238,9 @@ using SVSignalR.Shared.AppData;
 
     public void Dispose()
     {
+        //Close Hub connection
         _ = hubConnection.DisposeAsync();
+
     }
 
     void Cancel()

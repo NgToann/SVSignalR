@@ -20,6 +20,9 @@ namespace SVSignalR.Server.Data
         public DbSet<CovidPlanModel> CovidPlanList { get; set; }
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<SizeRunModel> SizeRun { get; set; }
+        public DbSet<OutsoleSupplierModel> OutsoleSuppliers { get; set; }
+        public DbSet<OutsoleWHCheckModel> OutsoleMaterialCheckingList { get; set; }
+
 
     }
 }

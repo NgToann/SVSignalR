@@ -35,15 +35,13 @@ namespace SVSignalR.Server.Controllers
 
         // GET: api/Workers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<WorkerModel>> GetWorkerModel(string id)
+        public ActionResult<WorkerModel> GetWorkerModel(string id)
         {
-            var workerModel = await _context.Workers.FindAsync(id);
-
+            var workerModel = _context.Workers.Find(id);
             if (workerModel == null)
             {
                 return NotFound();
             }
-
             return workerModel;
         }
 

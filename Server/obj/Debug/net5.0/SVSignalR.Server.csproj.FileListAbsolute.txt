@@ -196,3 +196,6 @@ C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\obj\Debug\net5.0\SVSignalR.S
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\AntDesign.dll
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\Microsoft.AspNetCore.Components.DataAnnotations.Validation.dll
 C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\OneOf.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\PhucNguyen\Desktop\ms-tut\SVSignalR\Server\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll

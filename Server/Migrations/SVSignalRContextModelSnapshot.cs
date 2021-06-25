@@ -73,7 +73,7 @@ namespace SVSignalR.Server.Migrations
 
             modelBuilder.Entity("SVSignalR.Shared.Models.CovidPlanModel", b =>
                 {
-                    b.Property<string>("CovidPlanId")
+                    b.Property<string>("WorkerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AddressDetail")
@@ -85,17 +85,24 @@ namespace SVSignalR.Server.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("HealthStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LineName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WorkerId")
-                        .IsRequired()
+                    b.Property<string>("SectionName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CovidPlanId");
+                    b.HasKey("WorkerId");
+
+                    b.HasIndex("AddressId");
 
                     b.ToTable("CovidPlanList");
                 });
@@ -149,6 +156,100 @@ namespace SVSignalR.Server.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.OutsoleSupplierModel", b =>
+                {
+                    b.Property<int>("OutsoleSupplierId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SupplierOperation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OutsoleSupplierId");
+
+                    b.ToTable("OutsoleSuppliers");
+                });
+
+            modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.OutsoleWHCheckModel", b =>
+                {
+                    b.Property<int>("OSCheckingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CheckingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ConfirmedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ErrorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Excess")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsConfirm")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRelease")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OutsoleSupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductNo")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Reject")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReleasedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReturnReject")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReturnRemark")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SizeNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SizeNoUpper")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WorkerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkingCard")
+                        .HasColumnType("int");
+
+                    b.HasKey("OSCheckingID");
+
+                    b.HasIndex("OutsoleSupplierId");
+
+                    b.HasIndex("ProductNo");
+
+                    b.ToTable("OutsoleMaterialCheckingList");
+                });
+
             modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.SizeRunModel", b =>
                 {
                     b.Property<int>("SizeRunId")
@@ -162,14 +263,11 @@ namespace SVSignalR.Server.Migrations
                     b.Property<string>("MidsoleSize")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OrderProductNo")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("OutsoleSize")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductNo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -182,7 +280,7 @@ namespace SVSignalR.Server.Migrations
 
                     b.HasKey("SizeRunId");
 
-                    b.HasIndex("OrderProductNo");
+                    b.HasIndex("ProductNo");
 
                     b.ToTable("SizeRun");
                 });
@@ -212,17 +310,47 @@ namespace SVSignalR.Server.Migrations
                     b.ToTable("Workers");
                 });
 
+            modelBuilder.Entity("SVSignalR.Shared.Models.CovidPlanModel", b =>
+                {
+                    b.HasOne("SVSignalR.Shared.Models.AddressModel", "AddressInfo")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AddressInfo");
+                });
+
+            modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.OutsoleWHCheckModel", b =>
+                {
+                    b.HasOne("SVSignalR.Shared.Models.MasterSchedule.OutsoleSupplierModel", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("OutsoleSupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SVSignalR.Shared.Models.MasterSchedule.OrderModel", "Order")
+                        .WithMany("OutsoleWHMaterial")
+                        .HasForeignKey("ProductNo");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.SizeRunModel", b =>
                 {
                     b.HasOne("SVSignalR.Shared.Models.MasterSchedule.OrderModel", "Order")
                         .WithMany("SizeRuns")
-                        .HasForeignKey("OrderProductNo");
+                        .HasForeignKey("ProductNo");
 
                     b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SVSignalR.Shared.Models.MasterSchedule.OrderModel", b =>
                 {
+                    b.Navigation("OutsoleWHMaterial");
+
                     b.Navigation("SizeRuns");
                 });
 #pragma warning restore 612, 618
